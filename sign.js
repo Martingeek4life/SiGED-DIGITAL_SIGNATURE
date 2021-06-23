@@ -68,14 +68,14 @@ async function Sign(Doc, Payload, res) {
         private_key: private_key,
         signature: signature,
         stamp: stamp,
-        signed_doc: pdfBytes
+        signed_doc: pdfBytes,
+        filename: Doc.originalname
     };
-    console.log(signature_info);
+    // console.log(signature_info);
     let SignedDocument = new SignedDocument_Model(signature_info);
-    SignedDocument.save(function (err) {
-        if (err) return handleError(err);
+    SignedDocument.save(function (err, doc) {
         console.log("signed document saved");
-        res.json({ signature_info });
+        res.json(signature_info);
       });
 }
 module.exports = { Sign };

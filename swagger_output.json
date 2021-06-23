@@ -47,6 +47,14 @@
         "parameters": [],
         "responses": {}
       }
+    },
+    "/Siged-api/verified": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
     }
   },
   "definitions": {}

@@ -1,24 +1,33 @@
-const crypto = require('crypto');
-const fs = require('fs');
-
-const public_key = fs.readFileSync('keys/publicKey.pem', 'utf-8');
-
-const signature = fs.readFileSync('signatures/signature.txt', 'utf-8');
-const signature2 = fs.readFileSync('signatures/signature2.txt', 'utf-8');
-
-// File to be verified
-const doc = fs.readFileSync('documents/Formations_ASSESSA.pdf');
-const doc2 = fs.readFileSync('documents/docToSign2.txt');
-
-// Verify
-const verifier = crypto.createVerify('RSA-SHA256');
-verifier.write(doc);
-verifier.end();
-const verifier2 = crypto.createVerify('RSA-SHA256');
-verifier2.write(doc2);
-verifier2.end();
-
-const result = verifier.verify(public_key, signature, 'base64');
-const result2 = verifier2.verify(public_key, signature2, 'base64');
-
-console.log('Digital Signature Verification : ' ,result, result2);
+async function verify(doc, payload, res) {
+    const crypto = require('crypto');
+    const fs = require('fs');
+    var SignedDocument_Model = require('./Endpoint_models/SignedDocument');
+    console.log(payload);
+    SignedDocument_Model.find({ doc_id: payload.doc_id }).exec(function (err, model) {
+      console.log(model);
+      const public_key = model[0].public_key;
+      const original_signature = model[0].signature;
+      const incoming_doc = fs.readFileSync('./'+doc);
+      // Verify
+      const verifier = crypto.createVerify('RSA-SHA256');
+      verifier.write(incoming_doc);
+      verifier.end();
+      const is_verified = verifier.verify(public_key, original_signature, 'base64');
+      console.log(is_verified);
+      if(is_verified) {
+        const doc_info_verified = {
+          author: model[0].author,
+          dest: model[0].dest,
+          stamp: model[0].stamp,
+          reason: model[0].reason,
+          description: model[0].description,
+          location: model[0].location,
+          verified: is_verified
+        };
+        res.json(doc_info_verified);
+      } else {
+        res.json({ is_verified: is_verified });
+      }
+    });
+}
+module.exports = { verify };
