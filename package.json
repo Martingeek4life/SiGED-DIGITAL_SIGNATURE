@@ -2,15 +2,23 @@
   "name": "dgital-signature",
   "version": "1.0.0",
   "description": "simple implementation of Digital Signature using Public Key Cryptography and Crypto",
-  "author": "Hamid Osouli <hamidosouli76@gmail.com>",
-  "license": "MIT",
+  "author": "Martin Rodrigue A. Ongolo <atanganamr@yahoo.com@gmail.com>",
+  "license": "peguy",
   "dependencies": {
-    "qrcode": "^1.4.4"
+    "child_process": "^1.0.2",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.14",
+    "multer": "^1.4.2",
+    "pdf-lib": "^1.16.0",
+    "qrcode": "^1.4.4",
+    "swagger-autogen": "^2.6.3",
+    "swagger-ui-express": "^4.1.4"
   },
   "scripts": {
     "generate": "openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:3 -out keys/privateKey.pem && openssl pkey -in keys/privateKey.pem -out keys/publicKey.pem -pubout",
     "sign": "node sign.js",
     "verify": "node verify.js",
-    "qr": "node QRcode.js"
+    "start": "node index.js",
+    "swagger-autogen": "node swagger.js"
   }
 }

@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /home/le-compilateur-martin/.yarn/bin/yarn.js install
+  /usr/local/bin/node /home/le-compilateur-martin/.yarn/bin/yarn.js add body-parser
 
 PATH: 
   /home/le-compilateur-martin/.yarn/bin:/home/le-compilateur-martin/.config/yarn/global/node_modules/.bin:/google-cloud-sdk/bin:/home/le-compilateur-martin/bin:/home/le-compilateur-martin/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
@@ -14,23 +14,27 @@ Platform:
   linux x64
 
 Trace: 
-  Error: EPERM: operation not permitted, symlink '../qrcode/bin/qrcode' -> '/media/le-compilateur-martin/MYLINUXLIVE/SIGED/Digital_Signature/Digital-Signature/node_modules/.bin/qrcode'
+  Error: EPERM: operation not permitted, symlink '../../../mime/cli.js' -> '/media/le-compilateur-martin/MYLINUXLIVE/SIGED/SiGED-DIGITAL_SIGNATURE/node_modules/send/node_modules/.bin/mime'
 
 npm manifest: 
   {
     "name": "dgital-signature",
     "version": "1.0.0",
     "description": "simple implementation of Digital Signature using Public Key Cryptography and Crypto",
-    "author": "Hamid Osouli <hamidosouli76@gmail.com>",
-    "license": "MIT",
+    "author": "Martin Rodrigue A. Ongolo <atanganamr@yahoo.com@gmail.com>",
+    "license": "peguy",
     "dependencies": {
-      "qrcode": "^1.4.4"
+      "qrcode": "^1.4.4",
+      "express": "^4.17.1",
+      "swagger-autogen": "^2.6.3",
+      "swagger-ui-express": "^4.1.4"
     },
     "scripts": {
       "generate": "openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:3 -out keys/privateKey.pem && openssl pkey -in keys/privateKey.pem -out keys/publicKey.pem -pubout",
       "sign": "node sign.js",
       "verify": "node verify.js",
-      "qr": "node QRcode.js"
+      "start": "node index.js",
+      "swagger-autogen": "node swagger.js"
     }
   }
 
