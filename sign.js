@@ -5,23 +5,12 @@ async function Sign(Doc, Payload, res) {
     const StandardFonts = require('pdf-lib').StandardFonts;
     const crypto = require('crypto');
     const fs = require('fs');
-    var SignedDocument_Model = require('./Endpoint_models/SignedDocument');
     var private_key = fs.readFileSync('keys/privateKey.pem', 'utf-8');
     var public_key = fs.readFileSync('keys/publicKey.pem', 'utf-8');
+    var SignedDocument_Model = require('./Endpoint_models/SignedDocument');
     // File to be signed
     const doc = fs.readFileSync(Doc.path);
-    // Signing
-    while(! (private_key = fs.readFileSync('keys/privateKey.pem', 'utf-8')) && (public_key = fs.readFileSync('keys/publicKey.pem', 'utf-8'))) {
-        var private_key = fs.readFileSync('keys/privateKey.pem', 'utf-8');
-        var public_key = fs.readFileSync('keys/publicKey.pem', 'utf-8');
-    }
-    let signer = crypto.createSign('RSA-SHA256');
-    signer.write(doc);
-    signer.end();
-    let signature = signer.sign(private_key, 'base64');
     let stamp = new Date();
-    console.log('Digital Signature: ', signature);
-    fs.writeFileSync('signatures/signature.txt', signature);
     const existingPdfBytes = doc;
 
     // Load a PDFDocument from the existing PDF bytes
@@ -50,13 +39,24 @@ async function Sign(Doc, Payload, res) {
 
     // Serialize the PDFDocument to bytes (a Uint8Array)
     const pdfBytes = await pdfDoc.save()
-    let writeStream = fs.createWriteStream('./uploads/signed.pdf');
+    let writeStream = fs.createWriteStream('./uploads/tosigned.pdf');
     writeStream.write(pdfBytes, 'base64');
     writeStream.on('finish', () => {  
     console.log('saved');
     });
-    writeStream.end(); 
-
+    writeStream.end();
+    // Signing
+    while(! (private_key)  && (public_key)) {
+        private_key = fs.readFileSync('keys/privateKey.pem', 'utf-8');
+        public_key = fs.readFileSync('keys/publicKey.pem', 'utf-8');
+    }
+    doc_signed = fs.readFileSync('./uploads/tosigned.pdf');
+    let signer = crypto.createSign('RSA-SHA256');
+    signer.write(doc_signed);
+    signer.end();
+    let signature = signer.sign(private_key, 'base64');
+    console.log('Digital Signature: ', signature);
+    fs.writeFileSync('signatures/signature.txt', signature);
     const signature_info = {
         doc_id: Payload.doc_id,
         author: Payload.author,

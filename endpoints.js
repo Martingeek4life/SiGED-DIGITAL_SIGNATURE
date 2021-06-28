@@ -19,7 +19,7 @@ module.exports = function (app) {
 	app.post('/Siged-api/verified', upload.single("file"), verify);
 		function verify(req, res) {
 			// console.log(req.file.path);
-			verifier.verify(req.file.path, req.body, res);
+			verifier.verify(req.file, req.body, res);
 		}
 
 }

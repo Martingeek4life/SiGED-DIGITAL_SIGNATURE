@@ -7,8 +7,10 @@ async function verify(doc, payload, res) {
       console.log(model);
       const public_key = model[0].public_key;
       const original_signature = model[0].signature;
-      const incoming_doc = fs.readFileSync('./'+doc);
+      console.log(doc);
+      const incoming_doc = fs.readFileSync('./'+doc.path);
       // Verify
+      console.log(incoming_doc);
       const verifier = crypto.createVerify('RSA-SHA256');
       verifier.write(incoming_doc);
       verifier.end();
